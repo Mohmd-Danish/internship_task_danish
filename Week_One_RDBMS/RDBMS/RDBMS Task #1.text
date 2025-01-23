@@ -1,0 +1,190 @@
+create database university;
+
+CREATE TABLE Departments(
+    department_id INT PRIMARY KEY,
+    department_name VARCHAR(100)
+);
+
+INSERT INTO Departments (department_id, department_name) VALUES
+(1, 'Computer Science'),
+(2, 'Electronics'),
+(3, 'Mechanical Engineering'),
+(4, 'Civil Engineering'),
+(5, 'Mathematics');
+
+CREATE TABLE Students(
+    Student_id int PRIMARY key,
+    first_name varchar(100),
+    last_name varchar(100),
+    email VARCHAR(100),
+    phone VARCHAR(20), 
+    date_of_birth DATE, 
+    enrollment_date DATE ,
+    department_id int,
+    FOREIGN key (department_id ) REFERENCES Departments(department_id)
+)
+
+INSERT INTO Students (student_id, first_name, last_name, email, phone, date_of_birth, enrollment_date, department_id) VALUES
+(1, 'Rahul', 'Verma', 'rahul.verma@student.in', '9876512340', '2001-05-20', '2023-08-01', 1),
+(2, 'Priya', 'Singh', 'priya.singh@student.in', '9876512341', '2002-03-15', '2023-08-01', 1),
+(3, 'Amit', 'Shah', 'amit.shah@student.in', '9876512342', '2001-12-10', '2023-08-01', 2),
+(4, 'Neha', 'Rao', 'neha.rao@student.in', '9876512343', '2002-07-25', '2023-08-01', 3),
+(5, 'Kiran', 'Joshi', 'kiran.joshi@student.in', '9876512344', '2001-09-18', '2023-08-01', 2),
+(6, 'Anjali', 'Menon', 'anjali.menon@student.in', '9876512345', '2002-01-11', '2023-08-01', 4),
+(7, 'Vikas', 'Mishra', 'vikas.mishra@student.in', '9876512346', '2000-11-30', '2023-08-01', 1),
+(8, 'Rohan', 'Kapoor', 'rohan.kapoor@student.in', '9876512347', '2002-02-14', '2023-08-01', 3),
+(9, 'Sneha', 'Gupta', 'sneha.gupta@student.in', '9876512348', '2001-06-21', '2023-08-01', 5),
+(10, 'Manish', 'Tiwari', 'manish.tiwari@student.in', '9876512349', '2001-04-28', '2023-08-01', 4);
+
+CREATE TABLE Professors(
+    professor_id INT Primary key,
+    first_name varchar(100),
+    last_name varchar(100),
+    email VARCHAR(100),
+    phone VARCHAR(20)
+);
+
+
+INSERT INTO Professors (professor_id, first_name, last_name, email, phone) VALUES
+(1, 'Anil', 'Kumar', 'anil.kumar@university.in', '9876543210'),
+(2, 'Sangeeta', 'Sharma', 'sangeeta.sharma@university.in', '9876543211'),
+(3, 'Rajesh', 'Gupta', 'rajesh.gupta@university.in', '9876543212'),
+(4, 'Meera', 'Nair', 'meera.nair@university.in', '9876543213'),
+(5, 'Ashok', 'Patel', 'ashok.patel@university.in', '9876543214');
+
+CREATE TABLE Courses(
+    Course_id int PRIMARY key,
+    Course_name varchar(100),
+    department_id INT ,
+    FOREIGN key (department_id ) REFERENCES Departments(department_id),
+    professor_id INT,
+    FOREIGN key (professor_id  ) REFERENCES Professors(professor_id ),
+    credits INT 
+)
+
+
+INSERT INTO Courses (course_id, course_name, department_id, professor_id, credits) VALUES
+(1, 'Data Structures', 1, 1, 4),
+(2, 'Digital Electronics', 2, 2, 3),
+(3, 'Thermodynamics', 3, 3, 4),
+(4, 'Structural Analysis', 4, 4, 4),
+(5, 'Linear Algebra', 5, 5, 3),
+(6, 'Algorithms', 1, 1, 4),
+(7, 'VLSI Design', 2, 2, 3),
+(8, 'Fluid Mechanics', 3, 3, 4),
+(9, 'Transportation Engineering', 4, 4, 3),
+(10, 'Abstract Algebra', 5, 5, 3);
+
+CREATE TABLE Enrollments(
+    enrollment_id INT Primary key,
+    student_id INT ,
+    FOREIGN key (student_id  ) REFERENCES Students(student_id ),
+    course_id INT,
+    FOREIGN key (course_id ) REFERENCES Courses(course_id ),
+    enrollment_date DATE  ,
+    grade VARCHAR(5)
+)
+
+
+INSERT INTO Enrollments (enrollment_id, student_id, course_id, enrollment_date, grade) VALUES
+(1, 1, 1, '2023-08-05', 'A'),
+(2, 2, 1, '2023-08-05', 'B'),
+(3, 3, 2, '2023-08-06', 'A'),
+(4, 4, 3, '2023-08-07', 'C'),
+(5, 5, 2, '2023-08-07', 'B'),
+(6, 6, 4, '2023-08-08', 'A'),
+(7, 7, 6, '2023-08-09', 'B'),
+(8, 8, 8, '2023-08-10', 'C'),
+(9, 9, 9, '2023-08-11', 'A'),
+(10, 10, 10, '2023-08-12', 'B'),
+(11, 1, 6, '2023-08-13', 'A'),
+(12, 2, 7, '2023-08-14', 'B'),
+(13, 3, 8, '2023-08-15', 'A'),
+(14, 4, 9, '2023-08-16', 'C'),
+(15, 5, 10, '2023-08-17', 'B');
+
+1. Find the Total Number of Students in Each Department
+
+SELECT d.department_name,count(student_id) as students from Departments as d LEFT JOIN Students as s on d.department_id=s.department_id GROUP by d.department_id;
+
+2. List All Courses Taught by a Specific Professor
+
+SELECT course_name from courses WHERE professor_id in(SELECT professor_id from professors where first_name='Rajesh' && last_name='Gupta')
+
+3. Find the Average Grade of Students in Each Course
+
+SELECT course_name , 
+avg (case 
+        when grade="A" then 90  
+        when grade="B" then 60 
+        when grade="c" then 40  
+        else null
+        end)as avg_grade
+FROM courses as c left join enrollments as e on c.Course_id=e.course_id GROUP by course_name
+
+
+4. List All Students Who Have Not Enrolled in Any Courses
+
+
+select first_name ,last_name from students as s left JOIN  enrollments as e on s.student_id=e.Student_id WHERE e.student_id is null
+
+5. Find the Number of Courses Offered by Each Department
+
+SELECT d.department_name, count(c.course_id) as courses FROM departments as d left JOIN courses as c on d.department_id =c.department_id GROUP by  d.department_name;
+
+
+6. List All Students Who Have Taken a Specific Course (e.g., 'Database Systems')
+
+SELECT student_id FROM students WHERE department_id in(SELECT department_id from courses WHERE course_name='Algorithms')
+
+7. Find the Most Popular Course Based on Enrollment Numbers
+
+SELECT course_id
+FROM (
+    SELECT course_id, COUNT(*) AS enrollment_count
+    FROM Enrollments
+    GROUP BY course_id
+) AS SubQuery
+ORDER BY enrollment_count DESC
+LIMIT 1;
+
+8. Find the Average Number of Credits Per Student in a Department
+
+SELECT 
+    d.department_name,
+    AVG(c.credits) AS avg_credits_per_student
+FROM 
+    students AS s
+LEFT JOIN 
+    departments AS d 
+ON 
+    s.department_id = d.department_id
+LEFT JOIN 
+    courses AS c 
+ON 
+    d.department_id = c.department_id
+GROUP BY 
+    d.department_id, d.department_name;
+
+
+9. List All Professors Who Teach in More Than One Department
+
+SELECT first_name ,last_name from professors WHERE professor_id in (select professor_id FROM courses  
+ GROUP by professor_id HAVING count(department_id)>1);
+    
+    
+10. Get the Highest and Lowest Grade in a Specific Course (e.g., 'Data Structures')
+SELECT max(case 
+        when grade="A" then 90  
+        when grade="B" then 60 
+        when grade="c" then 40  
+        else null
+        end)as highest_Grade, 
+        min(case 
+        when grade="A" then 90  
+        when grade="B" then 60 
+        when grade="c" then 40  
+        else null
+        end) as lowest_Grade ,course_name 
+FROM courses as c LEFT join enrollments as e on c.Course_id=e.course_id GROUP by course_name HAVING course_name = 'Data Structures'
+    

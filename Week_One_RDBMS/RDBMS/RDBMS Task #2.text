@@ -1,0 +1,179 @@
+CREATE DATABASE ola; 
+
+CREATE  TABLE drivers(
+    driver_id int PRIMARY key,
+    first_name varchar(100),
+    last_name varchar(100),
+    phone VARCHAR(20), 
+    city VARCHAR(100),
+    VehicleType VARCHAR(100),
+    rating int
+);
+
+INSERT INTO drivers (driver_id, first_name, last_name, phone, city, VehicleType, rating)
+VALUES 
+(1, 'Ravi', 'Sharma', '9876543210', 'Delhi', 'Sedan', 5),
+(2, 'Amit', 'Verma', '8765432109', 'Mumbai', 'SUV', 4),
+(3, 'Priya', 'Singh', '7654321098', 'Bangalore', 'Hatchback', 4),
+(4, 'Rajesh', 'Gupta', '6543210987', 'Chennai', 'Sedan', 5),
+(5, 'Anil', 'Kumar', '5432109876', 'Hyderabad', 'SUV', 3),
+(6, 'Vikram', 'Rao', '4321098765', 'Pune', 'Sedan', 4),
+(7, 'Sunita', 'Mishra', '3210987654', 'Kolkata', 'Hatchback', 5),
+(8, 'Deepak', 'Yadav', '2109876543', 'Ahmedabad', 'Sedan', 3),
+(9, 'Meena', 'Jain', '1098765432', 'Jaipur', 'SUV', 4),
+(10, 'Nikhil', 'Patel', '9988776655', 'Lucknow', 'Hatchback', 4);
+
+CREATE  TABLE riders(
+    rider_id int PRIMARY key,
+    first_name varchar(100),
+    last_name varchar(100),
+    phone VARCHAR(20), 
+    city VARCHAR(100),
+    join_date date
+);
+
+INSERT INTO riders (rider_id, first_name, last_name, phone, city, join_date)
+VALUES 
+(1, 'Karan', 'Mehta', '9876541230', 'Delhi', '2023-01-15'),
+(2, 'Sneha', 'Kapoor', '8765432129', 'Mumbai', '2023-03-10'),
+(3, 'Ajay', 'Shah', '7654321019', 'Bangalore', '2023-05-20'),
+(4, 'Divya', 'Reddy', '6543210118', 'Chennai', '2023-07-25'),
+(5, 'Rahul', 'Saxena', '5432101217', 'Hyderabad', '2023-09-05'),
+(6, 'Neha', 'Chauhan', '4321011316', 'Pune', '2023-11-10'),
+(7, 'Vivek', 'Agarwal', '3210911415', 'Kolkata', '2023-12-01'),
+(8, 'Pooja', 'Roy', '2109811514', 'Ahmedabad', '2023-06-18'),
+(9, 'Alok', 'Sinha', '1098711613', 'Jaipur', '2023-08-30'),
+(10, 'Simran', 'Bhatia', '9988611712', 'Lucknow', '2023-10-22');
+
+CREATE  TABLE rides(
+    ride_id int PRIMARY key,
+    rider_id int,
+    FOREIGN key (rider_id) REFERENCES riders(rider_id),
+    driver_id int,
+    FOREIGN key (driver_id ) REFERENCES drivers(driver_id ),
+    ride_date date,
+    pickupLocation varchar(100),
+    dropLocation varchar(100),
+    distance DECIMAL(10, 2),
+    Fare DECIMAL(10, 2)
+    RideStatus  varchar(70)
+);
+
+INSERT INTO rides (ride_id, rider_id, driver_id, ride_date, pickupLocation, dropLocation, distance, Fare,RideStatus)
+VALUES 
+(1, 1, 1, '2024-01-01', 'Connaught Place', 'Indira Gandhi Intl Airport', 15.50, 350.00,'Completed'),
+(2, 2, 2, '2024-01-02', 'Bandra', 'Gateway of India', 18.00, 400.00,'Cancelled'),
+(3, 3, 3, '2024-01-03', 'MG Road', 'Electronic City', 25.00, 600.00,'Completed'),
+(4, 4, 4, '2024-01-04', 'T Nagar', 'Marina Beach', 12.00, 250.00,'Cancelled'),
+(5, 5, 5, '2024-01-05', 'Hitech City', 'Charminar', 20.00, 500.00,'Completed'),
+(6, 6, 6, '2024-01-06', 'Koregaon Park', 'Shaniwar Wada', 8.00, 200.00,'Ongoing'),
+(7, 7, 7, '2024-01-07', 'Salt Lake', 'Howrah Bridge', 10.00, 300.00,'Ongoing'),
+(8, 8, 8, '2024-01-08', 'Navrangpura', 'Sabarmati Ashram', 7.50, 150.00,'Cancelled'),
+(9, 9, 9, '2024-01-09', 'Malviya Nagar', 'Amber Fort', 15.00, 350.00,'Ongoing'),
+(10, 10, 10, '2024-01-10', 'Hazratganj', 'Bara Imambara', 10.00, 250.00,'Cancelled');
+
+CREATE  TABLE payments(
+    payment_iD int Primary Key,
+    ride_id int,
+    FOREIGN key (ride_id) REFERENCES rides(ride_id),
+    paymentMethod VARCHAR(50),
+    Amount DECIMAL(10, 2),
+    PaymentDate date
+);
+
+INSERT INTO payments (payment_iD, ride_id, paymentMethod, Amount, PaymentDate)
+VALUES 
+(1, 1, 'Credit Card', 350.00, '2024-01-01'),
+(2, 2, 'UPI', 400.00, '2024-01-02'),
+(3, 3, 'Cash', 600.00, '2024-01-03'),
+(4, 4, 'Credit Card', 250.00, '2024-01-04'),
+(5, 5, 'Debit Card', 500.00, '2024-01-05'),
+(6, 6, 'UPI', 200.00, '2024-01-06'),
+(7, 7, 'Cash', 300.00, '2024-01-07'),
+(8, 8, 'UPI', 150.00, '2024-01-08'),
+(9, 9, 'Credit Card', 350.00, '2024-01-09'),
+(10, 10, 'Debit Card', 250.00, '2024-01-10');
+
+
+1. Retrieve the names and contact details of all drivers with a rating of 4.5 or higher.
+
+SELECT first_name, last_name, phone, rating FROM drivers where rating>=4.5
+
+2. Find the total number of rides completed by each driver.
+
+SELECT driver_id, COUNT(ride_id) as totalRides from rides where driver_id in(SELECT driver_id FROM drivers)GROUP by driver_id
+
+3. List all riders who have never booked a ride
+
+SELECT  first_name, last_name FROM riders where rider_id not in(SELECT rider_id from rides)
+
+4. Calculate the total earnings of each driver from completed rides.
+
+SELECT d.driver_id ,d.first_name, d.last_name, sum(Amount) as totalEarnings from  drivers as d  left join rides  as r on d.driver_id=r.driver_id left join payments as p on r.ride_id=p.ride_id where d.driver_id in( SELECT r.driver_id from rides) GROUP by d.driver_id, d.first_name, d.last_name
+
+5. Retrieve the most recent ride for each rider.
+
+SELECT 
+    r.rider_id,
+    r1.first_name,
+    r1.last_name,
+    r.ride_date AS mostRecentRide
+FROM 
+    rides AS r
+JOIN 
+    riders AS r1 ON r.rider_id = r1.rider_id
+WHERE 
+    r.ride_date = (
+        SELECT MAX(ride_date)
+        FROM rides AS r2
+        WHERE r2.rider_id = r.rider_id
+    );
+
+6. Count the number of rides taken in each city.
+
+select d.driver_id, d.city, count(r.ride_id)as noOfrides from drivers  as d left JOIN rides as r on d.driver_id=r.driver_id  GROUP by d.driver_id, d.city
+
+7. List all rides where the distance was greater than 20 km.
+
+select ride_id  FROM rides where distance>20 
+
+8. Identify the most preferred payment method.
+
+SELECT 
+    paymentMethod,
+    COUNT(paymentMethod) AS usageCount
+FROM 
+    payments
+GROUP BY 
+    paymentMethod
+ORDER BY 
+    usageCount DESC
+LIMIT 1;
+
+
+
+9. Find the top 3 highest-earning drivers.
+SELECT 
+   
+    d.first_name, 
+    d.last_name, 
+    SUM(p.amount) AS total_earnings
+FROM 
+    drivers AS d
+LEFT JOIN 
+    rides AS r 
+ON 
+    d.driver_id = r.driver_id
+LEFT JOIN 
+    payments AS p 
+ON 
+    r.ride_id = p.ride_id
+GROUP BY 
+     d.first_name, d.last_name
+ORDER BY 
+    total_earnings DESC
+LIMIT 3;
+
+10. Retrieve details of all cancelled rides along with the rider's and driver's names
+
+SELECT r.ride_id,r.ride_date,r.pickupLocation ,r.dropLocation, r.distance ,r.Fare,r.RideStatus,d.first_name,d.last_name, r1.first_name,r1.last_name  FROM rides as r join riders as r1 on r.rider_id=r1.rider_id join drivers as d on r.driver_id=d.driver_id WHERE r.RideStatus='cancelled' GROUP by r.ride_id

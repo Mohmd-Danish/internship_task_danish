@@ -1,0 +1,77 @@
+Internship Task - RDBMS and SQL Task #4
+
+HRMS Application Database schema
+-- ===========================
+-- CREATE TABLES
+-- ===========================
+CREATE TABLE Employees (
+    EmployeeID INT PRIMARY KEY,
+    FirstName VARCHAR(100),
+    LastName VARCHAR(100),
+    Email VARCHAR(100),
+    Phone VARCHAR(20),
+    HireDate DATE,
+    DepartmentID INT,
+    ManagerID INT,
+    Salary DECIMAL(10, 2),
+    FOREIGN KEY (DepartmentID) REFERENCES Departments(DepartmentID),
+    FOREIGN KEY (ManagerID) REFERENCES Employees(EmployeeID)
+);
+
+CREATE TABLE Departments (
+    DepartmentID INT PRIMARY KEY,
+    DepartmentName VARCHAR(100),
+    ManagerID INT,
+    FOREIGN KEY (ManagerID) REFERENCES Employees(EmployeeID)
+);
+
+CREATE TABLE PerformanceReviews (
+    ReviewID INT PRIMARY KEY,
+    EmployeeID INT,
+    ReviewDate DATE,
+    PerformanceScore ENUM('Excellent', 'Good', 'Average', 'Poor'),
+    Comments TEXT,
+    FOREIGN KEY (EmployeeID) REFERENCES Employees(EmployeeID)
+);
+
+CREATE TABLE Payroll (
+    PayrollID INT PRIMARY KEY,
+    EmployeeID INT,
+    PaymentDate DATE,
+    Amount DECIMAL(10, 2),
+    PaymentMethod ENUM('Bank Transfer', 'Check'),
+    FOREIGN KEY (EmployeeID) REFERENCES Employees(EmployeeID)
+);
+
+
+-- ===========================
+-- INSERT DATA into TABLES
+-- ===========================
+
+-- ====================================
+-- SQL Queries for the Case Study
+-- ====================================
+
+
+1. Retrieve the names and contact details of employees hired after January 1, 2023.
+    --------------------------------------------------------
+2. Find the total payroll amount paid to each department.
+    --------------------------------------------------------
+3. List all employees who have not been assigned a manager.
+    --------------------------------------------------------
+4. Retrieve the highest salary in each department along with the employee’s name.
+    --------------------------------------------------------
+5. Find the most recent performance review for each employee.
+    --------------------------------------------------------
+6. Count the number of employees in each department.
+    --------------------------------------------------------
+7. List all employees who have received a performance score of "Excellent." Identify the
+most frequently used payment method in payroll.
+    --------------------------------------------------------
+8. Retrieve the top 5 highest-paid employees along with their departments.
+    --------------------------------------------------------
+9. Show details of all employees who report directly to a specific manager (e.g.,
+ManagerID = 101).
+-- ====================================================
+            <<<----- THE END ----->>>
+-- ====================================================
